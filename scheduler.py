@@ -10,6 +10,8 @@ import uuid
 import email
 import datetime
 from datetime import timedelta
+import logging
+from logging.handlers import RotatingFileHandler
 
 #
 # Global variables
@@ -19,7 +21,7 @@ project_members = ''
 no_days = ''
 project = ''
 
-FROM_EMAIL      = "your_email_address@gmail.com"
+FROM_EMAIL      = "you_email_address@gmail.com"
 FROM_PWD        = "your_password"
 SERVER     = "smtp.gmail.com"
 PORT       = 587
@@ -197,7 +199,8 @@ def read_email(num_days):
                     email_info.append({'From':msg['from'],'Subject':msg['subject'].replace("\r\n","")})
                     
     except Exception, e:
-        print str(e)
+        logger.error(str(datetime.datetime.now()) + " - Error while reading mail : " + str(e) + "\n")
+        logger.exception(str(e))
 
     return email_info
 
@@ -213,6 +216,12 @@ args = parser.parse_args()
 
 no_days = args.n
 project = args.p
+
+logger = logging.getLogger("Scheduler Log")
+logger.setLevel(logging.INFO)
+
+logHandler = RotatingFileHandler('app.log',maxBytes=3000,backupCount=2)
+logger.addHandler(logHandler)
 
 #
 # Read the scheduler config file
@@ -243,9 +252,14 @@ print " "
 print 'Processing the scheduler against project ' + project + '....'
 
 
-commits = process_commits()
+try:
+    commits = process_commits()
 
-if len(commits) == 0:
-    print 'No commits found '
-else:
-    schedule_review_request(commits)
+    if len(commits) == 0:
+        print 'No commits found '
+    else:
+        schedule_review_request(commits)
+except Exception,e:
+    print 'Error occurred. Check log for details.'
+    logger.error(str(datetime.datetime.now()) + " - Error while reading mail : " + str(e) + "\n")
+    logger.exception(str(e))
