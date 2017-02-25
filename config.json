@@ -1,0 +1,19 @@
+[{
+    "name": "project_x",
+    "git_url": "https://github.com/royagasthyan/project_x",
+    "members": [
+    	"royagasthyan@gmail.com",
+    	"sam@gmail.com",
+    	"roy@gmail.com",
+    	"jamesalen@gmail.com"
+    ]
+}, {
+    "name": "project_y",
+    "git_url": "https://github.com/royagasthyan/project_y",
+    "members": [
+    	"royagasthyan",
+    	"hari",
+    	"sam",
+    	"shaun"
+    ]
+}]
